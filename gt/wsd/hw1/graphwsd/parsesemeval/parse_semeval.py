@@ -10,7 +10,7 @@ import xml.etree.ElementTree as etree
     @return - returns a dictionary: key -> id of the head tag in the sem-eval task 17 document @type string
                                     value-> word to be disambiguated @type string
 '''
-def get_wsd_data(filename):
+def get_wsd_input_data(filename):
     tree = etree.parse(filename)
         
 # xml file comes without a namespace; so looking up for all the head tags within the document,
@@ -30,7 +30,7 @@ def get_wsd_data(filename):
  
         
 if __name__ == '__main__':
-    dictionary = get_wsd_data('/Users/ganesathandavamponnuraj/Downloads/task17-test+keys/test/English/EnglishAW.test.xml');
+    dictionary = get_wsd_input_data('/Users/ganesathandavamponnuraj/Downloads/task17-test+keys/test/English/EnglishAW.test.xml');
     for key in dictionary.keys():
         print key," " + dictionary[key]
         
