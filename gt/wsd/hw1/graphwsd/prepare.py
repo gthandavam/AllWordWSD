@@ -37,9 +37,15 @@ def wn_pos_dist():
         print tag, count
     # Total number (sum of the above):
     print 'Total', sum(cats.values())
+    
+def get_sentence_graph():
+    return 
+
+def page_rank(sentence):
+    return
 
 if __name__ == '__main__':
-    print "preparing the graph for deep-learning"
+    print "page rank module"
     
     print wn.synsets("dog", "n") #why eclipse marking it as error ?
     
