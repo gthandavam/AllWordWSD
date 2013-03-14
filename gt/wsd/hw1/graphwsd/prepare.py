@@ -8,15 +8,20 @@ from nltk.corpus import wordnet as wn
 from collections import defaultdict
 
 '''
-idea: get different senses for the words from wordnet
+idea: 
+
+context is sentence:
+get different senses for the words in the context from wordnet 
 [extension: filter the set of feasible senses parsed on POS Tag - pre-processing]
- and attach
-a distribution for the word label pairs
+ and find co-occurrence similarity between labels of different words -> this gives us
+ the edge weights
 
 build a graph for each of the sentences that we are trying to disambiguate
 
+choose a graph structure
+
 and then perform pagerank on the graph (one run per instance) to yield 
-the most probably sense for the word
+the most probable sense for the word
 
 '''
 
@@ -35,9 +40,10 @@ def wn_pos_dist():
 
 if __name__ == '__main__':
     print "preparing the graph for deep-learning"
+    
     print wn.synsets("dog", "n") #why eclipse marking it as error ?
     
-    print [lemma.name for lemma in wn.synset('dog.n.01').lemmas]
+    print [sense.offset for sense in wn.synsets("dog")]
     
 #    wn_pos_dist()
     
