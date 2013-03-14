@@ -26,9 +26,7 @@ def get_wsd_input_data(filename):
         ret_dictionary[head.attrib['id']] = head.text
         
     return ret_dictionary    
-        
- 
-        
+              
 if __name__ == '__main__':
     dictionary = get_wsd_input_data('/Users/ganesathandavamponnuraj/Downloads/task17-test+keys/test/English/EnglishAW.test.xml');
     for key in dictionary.keys():
