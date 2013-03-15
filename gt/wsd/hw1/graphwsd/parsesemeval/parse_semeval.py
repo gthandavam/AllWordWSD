@@ -12,7 +12,7 @@ from nltk.corpus import wordnet as wn
     @return - returns a dictionary: key -> id of the head tag in the sem-eval task 17 document @type string
                                     value-> word to be disambiguated @type string
 '''
-def get_words_for_disambigation_test_data(filename):
+def get_words_for_disambiguation_test_data(filename):
     tree = etree.parse(filename)
         
 # xml file comes without a namespace; so looking up for all the head tags within the document,
@@ -47,7 +47,7 @@ def get_sentences(filename):
             print "non zero number of heads"
         
 if __name__ == '__main__':
-    dictionary = get_words_for_disambigation_test_data('/home/aravindous/GT-CompLing/test/English/EnglishAW.test.xml');
+    dictionary = get_words_for_disambiguation_test_data('/home/aravindous/GT-CompLing/test/English/EnglishAW.test.xml');
     for key in dictionary.keys():
         print key," " + dictionary[key]
         

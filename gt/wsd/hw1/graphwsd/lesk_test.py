@@ -16,6 +16,44 @@ import xml.etree.ElementTree as etree
 
 #takes a tree and a word key and returns a sentence which contains that word
 
+
+#def get_allwords_sentence(tree):
+#   sentence=""
+#   text_id=""
+#   dictionaries = [dict() for x in range(n)]
+#   
+#   for text in tree.findall("//s"):
+#     #print text_id=
+#     for head in text.iter():
+#     #print head
+#      if head.tag=="head": 
+#       #if head.attrib['id']==key:
+#              for s in text.itertext():
+#                  dictionaries[i][key]=
+#                  
+#   sentence=sentence.replace("\n", " ")
+#   return sentence              
+        
+
+    
+def get_sentence_dicts(tree):
+    text_id=""
+    dict = {}
+   
+    for head in tree.findall("//head"):
+             #   if head.attrib['id']!=None:
+                    l=split_syn_dots(head.attrib['id'])
+                    if (dict.get(l[0]+l[1])!=None):
+                            #if (head.attrib['id'])
+                            dict[l[0]+l[1]]+=","+head.attrib['id']
+                    else:
+                            dict[l[0]+l[1]]=head.attrib['id']
+                  #sentence+=s
+                  
+   #sentence=sentence.replace("\n", " ")
+    return dict       
+
+
 def get_sentence(tree,key):
    sentence=""
    text_id=""
@@ -85,10 +123,17 @@ def split_syn_dots(word):
     l.append(w)
     return l 
 f = open('ENGLISH.answer.test','w')
-tree = etree.parse('/home/user/Downloads/task17-test+keys/test/English/EnglishAW.test.xml')
+tree = etree.parse('/home/user/Downloads/task17-test+keys/test/English/small_EnglishAW.test.xml')
 #get_sentence(tree,"en3.s103.t1585")
 
-dictionary = get_wsd_input_data(tree);
+dicti={}
+dicti=get_sentence_dicts(tree)
+print dicti
+#for key in dicti.iterkeys():
+#    print key, dicti[key]
+
+
+
 print "Computing Lesk  Similarity  \n"
 #for key in dictionary.keys():
 #print "en3.s036.t595"," " + dictionary["en3.s036.t595"]
