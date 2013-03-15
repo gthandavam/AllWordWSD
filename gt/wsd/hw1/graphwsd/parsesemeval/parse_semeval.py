@@ -29,7 +29,7 @@ def get_words_for_disambigation_test_data(filename):
     return ret_dictionary    
 
 def find_similarity(word1, word2):
-    wn.
+    return
 
 def get_sentences(filename):
     #in-memory - bad 
@@ -41,13 +41,13 @@ def get_sentences(filename):
     
         heads = sentence.findall("head")
         
-        print etree.tostring(sentence, "UTF-8")
+        print etree.tostring(sentence)
         
         if( len(heads) ):#non zero length - consider a sentence otherwise just ignore
             print "non zero number of heads"
         
 if __name__ == '__main__':
-    dictionary = get_words_for_disambigation_test_data('/Users/ganesathandavamponnuraj/Downloads/task17-test+keys/test/English/EnglishAW.test.xml');
+    dictionary = get_words_for_disambigation_test_data('/home/aravindous/GT-CompLing/test/English/EnglishAW.test.xml');
     for key in dictionary.keys():
         print key," " + dictionary[key]
         
