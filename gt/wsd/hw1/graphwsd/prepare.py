@@ -42,18 +42,8 @@ def wn_pos_dist():
     # Total number (sum of the above):
     print 'Total', sum(cats.values())
     
-def process_per_sentence(filename):
-#    tree = etree.parse(filename)
-#    
-#    sentences = tree.findall(".//s")
-#    
-#    for sentence in sentences:
-#        text = etree.tostring(sentence)
-#        
-#        print text
-#    
-    
-    words = ['church', 'bell', 'rung', 'sunday']
+def process_per_sentence(words):
+
     word_synsets = {}
     synset_index = {}
     index = 0
@@ -80,6 +70,11 @@ def process_per_sentence(filename):
                             sim = 0
                         graph_matrix[synset_index[synset1]][synset_index[synset2]] = sim
                         graph_matrix[synset_index[synset2]][synset_index[synset1]] = sim
+#1 0.0742189207914
+#15 0.0442477876106
+#17 0.0743000904923
+#25 0.0673822870518
+
     
     for i in range(26):
         print [graph_matrix[i][j] for j in range(26)]   
@@ -94,15 +89,10 @@ def process_per_sentence(filename):
                 max_r = ranked_sense[synset_index[synset]]
                 max_index = synset_index[synset]
         print max_index, max_r    
-    
-    print wic.ic(wn.synsets("dog")[0])
          
 if __name__ == '__main__':
-#    print "page rank module"
-    
-#    print wn.synsets("dog", "n") #why eclipse marking it as error ?
-    
-#    print [sense.offset for sense in wn.synsets("dog")]
-    process_per_sentence("/home/aravindous/GT-CompLing/test/English/EnglishAW.test-sample.xml")
-#    wn_pos_dist()
+    words=['are', 'lessons', 'learnt', 'evaluation', 'mean', 'natural', 'conservation', 'policy']
+    process_per_sentence(words)
+    words1=['church', 'bell', 'rung', 'Sundays']
+    process_per_sentence(words1)
     
