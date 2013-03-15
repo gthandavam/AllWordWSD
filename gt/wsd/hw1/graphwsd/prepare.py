@@ -10,6 +10,7 @@ from nltk.stem import WordNetLemmatizer
 import xml.etree.ElementTree as etree
 import numbers
 import gt.wsd.hw1.graphwsd.pagerank.pagerank as pr
+from nltk.corpus import wordnet_ic as wic
 '''
 idea: 
 
@@ -93,6 +94,8 @@ def process_per_sentence(filename):
                 max_r = ranked_sense[synset_index[synset]]
                 max_index = synset_index[synset]
         print max_index, max_r    
+    
+    print wic.ic(wn.synsets("dog")[0])
          
 if __name__ == '__main__':
 #    print "page rank module"
