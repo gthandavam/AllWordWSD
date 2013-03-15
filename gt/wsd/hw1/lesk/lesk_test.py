@@ -66,8 +66,12 @@ def get_context_words(sentence):          #extracts content words and converts t
 
 
 def computeoverlap(sig1,sig2):            #need to know how many words have in common
+    w=""
+    k=0
     overlap=set.intersection(sig1,sig2)
-    return len(overlap) 
+    for w in overlap:
+      if len(w)>3: k+=1
+    return k
 
 def split_syn_dots(word):
     w=""
@@ -89,16 +93,24 @@ print "Computing Lesk  Similarity  \n"
 #for key in dictionary.keys():
 #print "en3.s036.t595"," " + dictionary["en3.s036.t595"]
   
-for key in dictionary.keys():
+for key in sorted(dictionary.iterkeys()):
   #print key," " + dictionary[key]
   word=wn.morphy(dictionary[key].lower())
   #print word,dictionary[key]
   sentence=get_sentence(tree,key)
   context_original=set([])
+  #print dictionary[key]
 # My first python program
   for w in get_context_words(sentence):
-     context_original.add(w)
-
+      if w.isdigit()==False:
+         context_original.add(w) 
+         if wn.lemmas(w)!=[]:
+           def_sentence=wn.lemmas(w)[0].synset.definition
+           for mmm in get_context_words(def_sentence):
+             context_original.add(mmm)
+        #   for example in wn.lemmas(w)[0].synset.examples:  adding examples decreases accuracy
+        #     for w in get_context_words(example):
+        #        context_original.add(w)
   #print key,word  
   best_sense=wn.lemmas(word)[0].synset  #best sense    #most frequent sense is a default one
   max_overlap=0
@@ -112,12 +124,12 @@ for key in dictionary.keys():
     for w in get_context_words(lemma.synset.definition):
         #print context_int
         context_int.add(w)
-        overlap=computeoverlap(context_original,context_int)
-    if overlap>max_overlap:
+    overlap=computeoverlap(context_original,context_int)
+    if overlap>max_overlap: 
         max_overlap=overlap
         best_sense=lemma.synset
   l=split_syn_dots(key)
- 
+  #print "for ",dictionary[key], " ", best_sense.definition
   answer_line=l[0]+" "+key+" eng-30-"+str(best_sense.offset)+"-"+best_sense.pos+"\n"
   f.write(answer_line)
 print "Finished"
