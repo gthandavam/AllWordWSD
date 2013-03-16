@@ -138,15 +138,16 @@ def process_per_sentence(words):
         print max_index, max_r, max_offset    
          
 if __name__ == '__main__':
-    tree = etree.parse('/home/user/Downloads/task17-test+keys/test/English/small_EnglishAW.test.xml')
-    word_map = get_word_map('/home/user/Downloads/task17-test+keys/test/English/small_EnglishAW.test.xml')
+    tree = etree.parse('/home/aravindous/GT-CompLing/test/English/EnglishAW.test-sample.xml')
+    word_map = get_word_map('/home/aravindous/GT-CompLing/test/English/EnglishAW.test-sample.xml')
     sentence_map = get_sentence_map(tree)
     #words=['are', 'lessons', 'learnt', 'evaluation', 'mean', 'natural', 'conservation', 'policy']
     for key in sentence_map.keys():
         word_list = sentence_map[key].split(",")
 #        print word_list
 #        print [word_map[word_id] for word_id in word_list]
-        process_per_sentence(word_map[word_id] for word_id in word_list)
+        words = [word_map[word_id] for word_id in word_list]
+        process_per_sentence(words)
 #    words1=['church', 'bell', 'rung', 'Sundays']
 #    process_per_sentence(words1)
 #    
