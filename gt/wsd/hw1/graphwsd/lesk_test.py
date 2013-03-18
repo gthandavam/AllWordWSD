@@ -34,9 +34,15 @@ import xml.etree.ElementTree as etree
 #   sentence=sentence.replace("\n", " ")
 #   return sentence              
         
-
+def pad_zeros(offset):
+    offset_str=str(offset)
+    for i in range(8-len(offset_str)):
+        offset_str='0'+offset_str        
+    return offset_str
     
-def get_sentence_dicts(tree):
+  
+
+def get_sentence_map(tree):
     text_id=""
     dict = {}
    
@@ -51,8 +57,7 @@ def get_sentence_dicts(tree):
                   #sentence+=s
                   
    #sentence=sentence.replace("\n", " ")
-    return dict       
-
+    return dict
 
 def get_sentence(tree,key):
    sentence=""
@@ -123,12 +128,12 @@ def split_syn_dots(word):
     l.append(w)
     return l 
 f = open('ENGLISH.answer.test','w')
-tree = etree.parse('/home/user/Downloads/task17-test+keys/test/English/small_EnglishAW.test.xml')
+tree = etree.parse('/home/user/Downloads/task17-test+keys/test/English/EnglishAW.test.xml')
 #get_sentence(tree,"en3.s103.t1585")
 
 dicti={}
-dicti=get_sentence_dicts(tree)
-print dicti
+dicti=get_wsd_input_data(tree)
+#print dicti
 #for key in dicti.iterkeys():
 #    print key, dicti[key]
 
@@ -138,14 +143,15 @@ print "Computing Lesk  Similarity  \n"
 #for key in dictionary.keys():
 #print "en3.s036.t595"," " + dictionary["en3.s036.t595"]
   
-for key in sorted(dictionary.iterkeys()):
+for key in sorted(dicti.iterkeys()):
   #print key," " + dictionary[key]
-  word=wn.morphy(dictionary[key].lower())
+  word=wn.morphy(dicti[key].lower())
   #print word,dictionary[key]
+  
   sentence=get_sentence(tree,key)
   context_original=set([])
-  #print dictionary[key]
-# My first python program
+  
+  #print key,sentence
   for w in get_context_words(sentence):
       if w.isdigit()==False:
          context_original.add(w) 
@@ -175,8 +181,10 @@ for key in sorted(dictionary.iterkeys()):
         best_sense=lemma.synset
   l=split_syn_dots(key)
   #print "for ",dictionary[key], " ", best_sense.definition
-  answer_line=l[0]+" "+key+" eng-30-"+str(best_sense.offset)+"-"+best_sense.pos+"\n"
+  offset_str=pad_zeros(best_sense.offset)
+  answer_line=l[0]+" "+key+" eng-30-"+offset_str+"-"+best_sense.pos+"\n"
   f.write(answer_line)
+f.close()  
 print "Finished"
  
 

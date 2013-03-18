@@ -89,14 +89,29 @@ def wn_pos_dist():
     # Total number (sum of the above):
     print 'Total', sum(cats.values())
     
-def process_per_sentence(words):
+def searchwl(word_map,word_list,word):
+    """need to print the key to output file"""
+    for key1 in word_list:
+       if word_map[key1]==word:
+           return key1
 
+def pad_zeros(offset):
+    offset_str=str(offset)
+    for i in range(8-len(offset_str)):
+        offset_str='0'+offset_str        
+    return offset_str
+    
+def process_per_sentence(f,words_list):
+     
     word_synsets = {}
     synset_index = {}
     index = 0
+    word_map = get_word_map('/home/user/Downloads/task17-test+keys/test/English/EnglishAW.test.xml')
+    words = [word_map[word_id] for word_id in word_list]
     words1 =words
     words2=words
     words3=words
+
     for word in words1:
         word_synsets[word] = wn.synsets(word)
         for synset in word_synsets[word]:
@@ -114,14 +129,15 @@ def process_per_sentence(words):
                 for synset1 in word_synsets[word1]:
                     for synset2 in word_synsets[word2]:
                         sim = synset1.wup_similarity(synset2)
-                        if isinstance(sim, numbers.Number) == False:
-                            sim = 0
+                        if isinstance(sim, numbers.Number) == False: sim = 0
                         graph_matrix[synset_index[synset1]][synset_index[synset2]] = sim
                         graph_matrix[synset_index[synset2]][synset_index[synset1]] = sim
+                        #print synset1,sim 
 #1 0.0742189207914
 #15 0.0442477876106
 #17 0.0743000904923
 #25 0.0673822870518
+     
     print graph_matrix
 
     ranked_sense = pr.get_pagerank(graph_matrix)
@@ -135,19 +151,25 @@ def process_per_sentence(words):
                 max_r = ranked_sense[synset_index[synset]]
                 max_offset = synset.offset
                 max_index = synset_index[synset]
-        print max_index, max_r, max_offset    
-         
+                rk=searchwl(word_map,word_list,word)
+                offset_str=pad_zeros(max_offset)
+                answer_line=key[0:3]+" "+rk+" eng-30-"+offset_str+"-"+synset.pos+"\n"
+                f.write(answer_line)
+    print "finished"           
+    f.close()     
 if __name__ == '__main__':
-    tree = etree.parse('/home/aravindous/GT-CompLing/test/English/EnglishAW.test-sample.xml')
-    word_map = get_word_map('/home/aravindous/GT-CompLing/test/English/EnglishAW.test-sample.xml')
+    f = open('ENGLISH_RW.answer.test','w')
+    tree = etree.parse('/home/user/Downloads/task17-test+keys/test/English/EnglishAW.test.xml')
+   
     sentence_map = get_sentence_map(tree)
     #words=['are', 'lessons', 'learnt', 'evaluation', 'mean', 'natural', 'conservation', 'policy']
+    
     for key in sentence_map.keys():
         word_list = sentence_map[key].split(",")
 #        print word_list
 #        print [word_map[word_id] for word_id in word_list]
-        words = [word_map[word_id] for word_id in word_list]
-        process_per_sentence(words)
+        
+        process_per_sentence(f,word_list)
 #    words1=['church', 'bell', 'rung', 'Sundays']
 #    process_per_sentence(words1)
 #    
