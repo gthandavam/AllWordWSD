@@ -12,6 +12,7 @@ import numbers
 import gt.wsd.hw1.graphwsd.pagerank.pagerank as pr
 #import gt.wsd.hw1.graphwsd.lesk_test.get_sentence_dicts as get_sentence_map
 from nltk.corpus import wordnet_ic as wic
+from math import fabs as absolute
 
 '''
 idea: 
@@ -101,14 +102,18 @@ def pad_zeros(offset):
         offset_str='0'+offset_str        
     return offset_str
     
-def process_per_sentence(f,words_list, word_map):
+def process_per_sentence(f,words_list, word_map, max_dist):
      
     word_synsets = {}
     synset_index = {}
     index = 0
+    word_position = {}
+    words = []
     
-    words = [word_map[word_id] for word_id in word_list]
-   
+    for word_id in words_list:
+        words.append(word_map[word_id])
+        word_position[word_map[word_id]] = int(word_id.split(".")[2][1:])
+        
     for word in words:
         word_synsets[word] = wn.synsets(word)
         for synset in word_synsets[word]:
@@ -122,12 +127,16 @@ def process_per_sentence(f,words_list, word_map):
     for word1 in words:
         for word2 in words:
             if word1 != word2:
-                for synset1 in word_synsets[word1]:
-                    for synset2 in word_synsets[word2]:
-                        sim = synset1.wup_similarity(synset2)
-                        if isinstance(sim, numbers.Number) == False: sim = 0
-                        graph_matrix[synset_index[synset1]][synset_index[synset2]] = sim
-                        graph_matrix[synset_index[synset2]][synset_index[synset1]] = sim
+                
+                #check how far the 2 words are from each other
+                if( absolute(word_position[word1] - word_position[word2]) <= max_dist ):
+                    
+                    for synset1 in word_synsets[word1]:
+                        for synset2 in word_synsets[word2]:
+                            sim = synset1.wup_similarity(synset2)
+                            if isinstance(sim, numbers.Number) == False: sim = 0
+                            graph_matrix[synset_index[synset1]][synset_index[synset2]] = sim
+                            graph_matrix[synset_index[synset2]][synset_index[synset1]] = sim
                         #print synset1,sim 
 #1 0.0742189207914
 #15 0.0442477876106
@@ -170,7 +179,7 @@ if __name__ == '__main__':
 #        print word_list
 #        print [word_map[word_id] for word_id in word_list]
         
-        process_per_sentence(f,word_list, word_map)
+        process_per_sentence(f,word_list, word_map, 11)
 #    words1=['church', 'bell', 'rung', 'Sundays']
 #    process_per_sentence(words1)
 #    
