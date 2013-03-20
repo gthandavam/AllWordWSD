@@ -102,7 +102,7 @@ def pad_zeros(offset):
         offset_str='0'+offset_str        
     return offset_str
     
-def process_per_sentence(f,words_list, word_map, max_dist):
+def process_per_sentence(f,words_list, word_map, max_dist, d_factor):
      
     word_synsets = {}
     synset_index = {}
@@ -143,9 +143,9 @@ def process_per_sentence(f,words_list, word_map, max_dist):
 #17 0.0743000904923
 #25 0.0673822870518
      
-    print graph_matrix
+#     print graph_matrix
 
-    ranked_sense = pr.get_pagerank(graph_matrix)
+    ranked_sense = pr.get_pagerank(graph_matrix, d_factor)
 #     print [word for word in words]
     for word in words:
         synsets = word_synsets[word]
@@ -164,11 +164,13 @@ def process_per_sentence(f,words_list, word_map, max_dist):
         offset_str=pad_zeros(max_offset)
         answer_line=key[0:3]+" "+rk+" eng-30-"+offset_str+"-"+chosen_synset.pos+"\n"
         f.write(answer_line)
-    print "finished"           
+#     print "finished"           
          
 if __name__ == '__main__':
     word_map = get_word_map('/home/gt/Downloads/test/English/EnglishAW.test.xml')
-    f = open('ENGLISH_RW.answer.test','w')
+    f1 = open('ENGLISH_RW.answer.test_35','w')
+    f2 = open('ENGLISH_RW.answer.test_85','w')
+    f3 = open('ENGLISH_RW.answer.test_90','w')
     tree = etree.parse('/home/gt/Downloads/test/English/EnglishAW.test.xml')
    
     sentence_map = get_sentence_map(tree)
@@ -179,8 +181,13 @@ if __name__ == '__main__':
 #        print word_list
 #        print [word_map[word_id] for word_id in word_list]
         
-        process_per_sentence(f,word_list, word_map, 11)
+        process_per_sentence(f1, word_list, word_map, 17, 0.30)
+        process_per_sentence(f2, word_list, word_map, 17, 0.85)
+        process_per_sentence(f3, word_list, word_map, 17, 0.90)
 #    words1=['church', 'bell', 'rung', 'Sundays']
 #    process_per_sentence(words1)
 #    
-    f.close()
+    f1.close()
+    f2.close()
+    f3.close()
+    print "finished"

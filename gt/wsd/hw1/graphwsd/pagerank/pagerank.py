@@ -59,10 +59,10 @@ def pageRank(G, s = .85, maxerr = .001):
     # return normalized pagerank
     return r/sum(r)
  
-def get_pagerank(matrix):
+def get_pagerank(matrix, d_factor):
     G = np.array(matrix)
     
-    return pageRank(G, s=.85) 
+    return pageRank(G, s=d_factor) 
  
  
 if __name__=='__main__':
@@ -75,4 +75,19 @@ if __name__=='__main__':
                   [0,0,0,0,0,1,1],
                   [0,0,0,1,1,0,1]])
  
-    print pageRank(G,s=.86)
+    G1 = np.array([[0,0,0,0.85,0.55,1.01,0,0,0,0],
+                  [0,0,0,0.40,0.35,0.80,0,0,0,0],
+                  [0,0,0,0.23,0.19,1.06,0,0,0,0],
+                  [0.85,0.40,1.01,0,0,0,0,0,0,0],
+                  [0.55,0.35,0.80,0,0,0,0,0,0,0],
+                  [1.01,0.80,1.06,0,0,0,0.30,0.34,0.50,0],
+                  [0,0,0,0,0,0.30,0,0,0,0],
+                  [0,0,0,0,0,0.34,0,0,0,0.31],
+                  [0,0,0,0,0,0.50,0,0,0,0.35],
+                  [0,0,0,0,0,0,0,0.31,0.35,0]])
+    print pageRank(G,s=.50)
+    print pageRank(G,s=.35)
+    print pageRank(G,s=.85)
+    print pageRank(G1,s=.85)
+    
+    
