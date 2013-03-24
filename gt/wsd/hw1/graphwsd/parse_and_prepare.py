@@ -12,6 +12,7 @@ import gt.wsd.hw1.graphwsd.pagerank.pagerank as pr
 import re
 from math import fabs as absolute
 from bs4 import BeautifulSoup as bs
+import nltk
 
 '''
 idea: 
@@ -102,19 +103,23 @@ def remove_stop_words(context):
     '''
     @param f : file object -> file handle to the output file
     @param context: list of words in order as present in the context
-    @param tword_key_map: array same length as context: contains '' or 
+    @param tgt_words: list same length as context: contains '' or 
                         the actual id of the target word as applicable
     @param max_dist: maxDist parameter as per R.Mihalcea
     @param d_factor: damping factor for pagerank   
     '''
 def process_per_sentence(f,context, tgt_words, max_dist, d_factor):
-     
+    
+    print context
     word_synsets = {}
     synset_index = {}
     index = 0
         
     for i in range(len(context)):
         t_context = tuple([i,context[i]])
+#         word = wn.morphy(context[i])
+#         if( word == None ) :
+#             word = context[i]
         word_synsets[t_context] = wn.synsets(context[i])
         for synset in word_synsets[t_context]:
             t_synset = tuple([i, synset])
@@ -136,11 +141,14 @@ def process_per_sentence(f,context, tgt_words, max_dist, d_factor):
                         t_s1 = tuple([i, synset1])
                         for synset2 in word_synsets[ tuple([j, context[j]]) ]:
                             t_s2 = tuple([j, synset2])
-                            sim = synset1.wup_similarity(synset2)
-                            if isinstance(sim, numbers.Number) == False: sim = 0
+#                             sim = synset1.wup_similarity(synset2)
+                            sim1 = wn.path_similarity(synset1, synset2)
+                            sim2 = wn.path_similarity(synset2, synset1)
+                            if isinstance(sim1, numbers.Number) == False: sim1 = 0
+                            if isinstance(sim2, numbers.Number) == False: sim2 = 0
                             
-                            graph_matrix[synset_index[t_s1]][synset_index[t_s2]] = sim
-                            graph_matrix[synset_index[t_s2]][synset_index[t_s1]] = sim
+                            graph_matrix[synset_index[t_s1]][synset_index[t_s2]] = sim1
+                            graph_matrix[synset_index[t_s2]][synset_index[t_s1]] = sim2
  
     ranked_sense = pr.get_pagerank(graph_matrix, d_factor)
 #     print ranked_sense
@@ -159,23 +167,32 @@ def process_per_sentence(f,context, tgt_words, max_dist, d_factor):
                 if ranked_sense[synset_index[t_synset]] >= max_r:
                     max_r = ranked_sense[synset_index[t_synset]]
                     res_offset = synset.offset
-                    chosen_synset = synset
-                 
-            offset_str=pad_zeros(res_offset)
-            answer_line=tgt_words[i][0:3]+" "+tgt_words[i]+" eng-30-"+offset_str+"-"+chosen_synset.pos+"\n"
-            print answer_line
-            f.write(answer_line)
+                    chosen_synset = synset  
+                    offset_str=pad_zeros(res_offset)
+                    answer_line=tgt_words[i][0:3]+" "+tgt_words[i]+" eng-30-"+offset_str+"-"+chosen_synset.pos+"\n"
+                    print answer_line
+                    f.write(answer_line)
 #     print "finished"           
 
         
 if __name__ == '__main__':
     filename = '/home/gt/Downloads/test/English/EnglishAW.test.xml'
+
+#     filename = '/home/gt/Downloads/test/English/test.xml'
     sentences = get_sentences(filename)
-    out_f = open('ENGLISH_RW.answer.new.test_85','w')
+    out_f = open('/home/gt/Downloads/test/scorer2/ENGLISH_RW.answer.morphy_85_path_stopwords_no_punc_7width','w')
+#     out_f = open('/home/gt/Downloads/test/scorer2/test','w')
+
+    punc = re.compile(r'[-.?!,":;()|/0-9]')
     for sentence in sentences:
         context = get_context(sentence)
-#         context_list = context.split()
-        context_list = remove_stop_words(context)
+#         
+#         pos_text = nltk.word_tokenize(context)
+#         pos_tags = nltk.pos_tag(pos_text)
+#         print pos_tags
+        context = punc.sub("", context)
+        context_list = context.split()
+#         context_list = remove_stop_words(context)
         print context_list
         t_words = get_target_words_map(sentence, context_list)
         print t_words
@@ -183,7 +200,7 @@ if __name__ == '__main__':
             hence choosing not to maintain position of target word
             in a sentence
         '''         
-        process_per_sentence(out_f, context_list, t_words, 100, 0.85)
+        process_per_sentence(out_f, context_list, t_words, 7, 0.85)
         
     out_f.close()
         

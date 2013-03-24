@@ -3,7 +3,6 @@ Created on Mar 14, 2013
 
 @author: ganesathandavamponnuraj
 
-Credits https://gist.github.com/diogojc/1338222
 '''
 import numpy as np
 from scipy.sparse import csc_matrix
