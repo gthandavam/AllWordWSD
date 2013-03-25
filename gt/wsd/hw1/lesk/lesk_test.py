@@ -4,12 +4,13 @@ from sets import Set
 from nltk.corpus import wordnet as wn
 from nltk.tokenize import word_tokenize, wordpunct_tokenize, sent_tokenize
 import xml.etree.ElementTree as etree
+path_string='/home/user/Downloads/task17-test+keys/test/English/small_EnglishAW.test.xml'
 
 #root=getroot('/home/user/Downloads/task17-test+keys/test/English/EnglishAW.test.xml')
 #root.xpath('/corpus/text/*/text()')
 
 '''
-    @param - filename @type string -> filename path that contains the sem-eval test data [EnglishAW.text.xml file]
+    @param - filename @type string -> filename pathpath_string that contains the sem-eval test data [EnglishAW.text.xml file]
     @return - returns a dictionary: key -> id of the head tag in the sem-eval task 17 document @type string
                                     value-> word to be disambiguated @type string
 '''
@@ -84,8 +85,8 @@ def split_syn_dots(word):
         w=""
     l.append(w)
     return l 
-f = open('ENGLISH.answer.test','w')
-tree = etree.parse('/home/user/Downloads/task17-test+keys/test/English/EnglishAW.test.xml')
+f = open('small_ENGLISH.answer.test','w')
+tree = etree.parse(path_string)
 #get_sentence(tree,"en3.s103.t1585")
 
 dictionary = get_wsd_input_data(tree);
