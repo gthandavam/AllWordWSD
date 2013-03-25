@@ -14,6 +14,9 @@ from math import fabs as absolute
 from bs4 import BeautifulSoup as bs
 import nltk
 
+filename='/home/gt/Downloads/small_EnglishAW.test.xml'
+outputfile='pagerank-output'
+
 '''
 idea: 
 
@@ -142,8 +145,8 @@ def process_per_sentence(f,context, tgt_words, max_dist, d_factor):
                         for synset2 in word_synsets[ tuple([j, context[j]]) ]:
                             t_s2 = tuple([j, synset2])
 #                             sim = synset1.wup_similarity(synset2)
-                            sim1 = wn.path_similarity(synset1, synset2)
-                            sim2 = wn.path_similarity(synset2, synset1)
+                            sim1 = wn.wup_similarity(synset1, synset2)
+                            sim2 = wn.wup_similarity(synset2, synset1)
                             if isinstance(sim1, numbers.Number) == False: sim1 = 0
                             if isinstance(sim2, numbers.Number) == False: sim2 = 0
                             
@@ -176,11 +179,9 @@ def process_per_sentence(f,context, tgt_words, max_dist, d_factor):
 
         
 if __name__ == '__main__':
-    filename = '/home/gt/Downloads/test/English/EnglishAW.test.xml'
-
 #     filename = '/home/gt/Downloads/test/English/test.xml'
     sentences = get_sentences(filename)
-    out_f = open('/home/gt/Downloads/test/scorer2/ENGLISH_RW.answer.morphy_85_path_stopwords_no_punc_7width','w')
+    out_f = open(outputfile,'w')
 #     out_f = open('/home/gt/Downloads/test/scorer2/test','w')
 
     punc = re.compile(r'[-.?!,":;()|/0-9]')
